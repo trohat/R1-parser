@@ -7,11 +7,13 @@ def parse_data(soup, file):
     names= soup.find(class_="h4")
     position = names.get_text()
     names = names.next_sibling
-    interpret = names.a.get_text()
+    band = names.a.get_text()
     song = re.search("(?<=\n\n).*", names.get_text()).group()
     #print(f"{position}. {interpret}: {song}")
     names = names.next_sibling
-    album = re.search("\n(.*?)\n", names.get_text()).group(1)
+    #print(type(names.get_text()))
+    #print(bytes(str(names.get_text()), "utf-8"))
+    album = re.search("\n(.*?)(\n|$)", names.get_text()).group(1)
     #print(album)
     names = names.next_sibling
     weeks = re.search("(sto|nka)\n(\d\d?) ", names.get_text())
@@ -24,7 +26,7 @@ def parse_data(soup, file):
         position += " -"
     #print("Weeks:", weeks)
     #print()
-    printable = f"{position:3} {interpret}: {song} ({album}){weeks}\n"
+    printable = f"{position:3} {band}: {song} ({album}){weeks}\n"
     file.write(printable)
     print(printable, end="")
 
